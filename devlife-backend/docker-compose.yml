@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: devlife-postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: devlife
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  mongo:
+    image: mongo:7
+    container_name: devlife-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+
+  redis:
+    image: redis:7
+    container_name: devlife-redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  pgdata:
+  mongodata:
