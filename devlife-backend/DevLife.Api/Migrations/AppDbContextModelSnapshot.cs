@@ -22,6 +22,133 @@ namespace DevLife.Api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("DevLife.Api.Models.BugChaseScore", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("PlayedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BugChaseScores");
+                });
+
+            modelBuilder.Entity("DevLife.Api.Models.DatingSetup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Bio")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LookingFor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("DatingSetups");
+                });
+
+            modelBuilder.Entity("DevLife.Api.Models.DatingSwipe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsMatch")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("Liked")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("MatchAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ProfileId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "ProfileId")
+                        .IsUnique();
+
+                    b.ToTable("DatingSwipes");
+                });
+
+            modelBuilder.Entity("DevLife.Api.Models.GameRound", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BetAmount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ChallengeId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDaily")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsWin")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("PlayedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("PointsChange")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("GameRounds");
+                });
+
             modelBuilder.Entity("DevLife.Api.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -30,8 +157,14 @@ namespace DevLife.Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("BestStreak")
+                        .HasColumnType("integer");
+
                     b.Property<DateOnly>("BirthDate")
                         .HasColumnType("date");
+
+                    b.Property<int>("CurrentStreak")
+                        .HasColumnType("integer");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -44,6 +177,15 @@ namespace DevLife.Api.Migrations
                     b.Property<string>("Level")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Points")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(100);
 
                     b.Property<string>("TechStack")
                         .IsRequired()
@@ -59,7 +201,32 @@ namespace DevLife.Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Username")
+                        .IsUnique();
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("DevLife.Api.Models.BugChaseScore", b =>
+                {
+                    b.HasOne("DevLife.Api.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DevLife.Api.Models.GameRound", b =>
+                {
+                    b.HasOne("DevLife.Api.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

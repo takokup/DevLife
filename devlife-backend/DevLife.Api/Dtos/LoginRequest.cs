@@ -1,3 +1,3 @@
 namespace DevLife.Api.Dtos;
 
-public record LoginRequest(string Username);
+public record LoginRequest(string Username,string Password);
